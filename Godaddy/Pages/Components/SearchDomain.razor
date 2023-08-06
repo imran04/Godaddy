@@ -1,0 +1,24 @@
+﻿<h3>SearchDomain</h3>
+
+<input @bind="Search"
+    ></input>
+<button @onclick="SearchDomainAsync">Search</button>
+
+@if (data!=null)
+{
+    <div class="@(data?.Available??false?"success":"error")">
+        Domain @data.Domain is @(data?.Available ?? false ? "available" : "taken")
+    </div>
+}
+@code {
+
+    [Inject]
+    public GodaddyWrapper.Client? Client { get; set; }
+    string Search;
+    public GodaddyWrapper.Responses.DomainAvailableResponse? data { get; set; }
+    public async Task SearchDomainAsync()
+    {
+         data =await Client.CheckDomainAvailable(new GodaddyWrapper.Requests.DomainAvailable { Domain = Search });
+    }
+
+}

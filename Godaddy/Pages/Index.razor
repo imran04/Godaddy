@@ -1,0 +1,56 @@
+﻿@page "/"
+
+
+
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, your Domains!</h1>
+@if (List?.Count > 0)
+{
+    <table>
+        @foreach (var item in List)
+        {
+            <tr>
+                <td>@item?.Domain</td>
+                <td>@string.Join(",",(item?.NameServers??new string[0]))</td>
+                <td>@item?.Expires</td>
+            </tr>
+        }
+    </table>
+}
+
+
+<Godaddy.Pages.Components.SearchDomain></Godaddy.Pages.Components.SearchDomain>
+
+
+@code {
+    [Inject]
+    public GodaddyWrapper.Client? Client { get; set; }
+
+    IList<GodaddyWrapper.Responses.DomainRetrieveResponse>? List;
+
+    protected async override Task OnInitializedAsync()
+    {
+        
+        var req = new GodaddyWrapper.Requests.DomainRetrieve() ;
+        req.Limit = 20;
+        req.Statuses = new List<string> { "ACTIVE" };
+        List =await Client?.RetrieveDomainList(req);
+
+
+
+
+
+     await base.OnInitializedAsync();
+
+        
+
+    }
+
+
+
+
+
+
+}
